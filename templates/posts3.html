@@ -1,0 +1,66 @@
+<html>
+
+<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        function uploadFile(file, url, re_url) {
+
+            fetch(url, {
+                method: 'PUT',
+                body: file
+            }).then(() => {
+                var end_point = '{{ end_point }}';
+                var slice_pos = '{{ slice_pos }}';
+
+                console.log('uploaded')
+                re_url = encodeURIComponent(re_url.split('/').slice(slice_pos).join('/'))
+                    re_url = document.location.origin + end_point + '?output=html&object_id=' + re_url
+                console.log(re_url)
+                document.location.href = re_url;
+
+                // encodeURIComponent('ac-overseas-site/ac-image-search/28e5ded7-9a11-4a75-92d2-012ae73fb6af/original.jpg')
+
+            }).catch((e) => {
+                console.error(e);
+            });
+        }
+
+        $(document).ready(function () {
+            $('#submit').click(function () {
+                document.getElementById("submit").disabled = true;
+                document.getElementById("submit").value = 'Uploading...';
+                var files = document.querySelector("#selector").files;
+                var file = files[0];
+                console.log(file.type)
+
+                $.ajax({
+                    url: 'https://54q2xv45m8.execute-api.ap-northeast-1.amazonaws.com/dev/upload-url',
+                    type: 'POST',   //type is any HTTP method
+                    data: JSON.stringify({"files": [{"filename": file.name, "content_type": file.type}]}),
+                    //Data as js object
+                    success: function (data) {
+                        console.log(data)
+                        console.log(data[0]["original_url"])
+                        console.log(data[0]["upload_url"])
+                        var files = document.querySelector("#selector").files;
+                        var file = files[0];
+                        uploadFile(file, data[0]["upload_url"], data[0]["original_url"])
+
+                    }
+                })
+                ;
+
+            });
+        });
+    </script>
+</head>
+<body>
+<form>
+    Upload image files:<br>
+    <input type="file" id="selector" multiple>
+    <input id="submit" type="button" value="Upload">
+</form>
+</body>
+</html>
