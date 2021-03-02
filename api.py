@@ -5,6 +5,7 @@ import dlib
 import urllib.request
 import logging
 import numpy as np
+from diskcache import Cache
 from pathlib import Path
 from omegaconf import OmegaConf
 from src.factory import get_model
@@ -95,11 +96,33 @@ def age2():
         for i, d in enumerate(detected):
             label = "{}, {}".format(int(predicted_ages[i]),
                                     "M" if predicted_genders[i][0] < 0.5 else "F")
+            print(label)
             draw_label(img, (d.left(), d.top()), label)
     output_path = "/age-files/%s.jpg" % str(uuid.uuid4())
     cv2.imwrite("." + output_path, img)
     return redirect(output_path, code=302)
     # return jsonify({'message': 'Age Detection'})
+
+
+@app.route('/age-search', methods=['GET'])
+def age_search():
+    from_ = 0
+    to_ = 100
+    try:
+        from_ = int(urllib.parse.unquote(request.args.get('from', 0)))
+        to_ = int(urllib.parse.unquote(request.args.get('to', 100)))
+
+    except Exception as ex:
+        pass
+
+    _cache = Cache('./age_cache')
+    range_ = range(from_, to_)
+    rs = []
+    for hex in _cache:
+        if _cache[hex] in range_:
+            rs.append(hex)
+    r = [{'src': "https://thumb.photo-ac.com/%s/%s_t.jpeg" % (hex[0:2], hex)} for hex in rs[0:50]]
+    return render_template('age.html', srcs=r)
 
 
 if __name__ == "__main__":

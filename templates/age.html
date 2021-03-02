@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head><title>ACWork Image Palette</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<style>
+    span {
+        width: 25%;
+    }
+</style>
+<body>
+<div class="container">
+    {% for img_src in srcs %}
+    <figure style="float: left; margin-right: 20px; margin-bottom: 20px;">
+        <img src="{{ img_src.src }}" height="200px">
+
+
+    </figure>
+    {% endfor %}
+</div>
+</body>
+</html>
+
+
