@@ -1,0 +1,48 @@
+<html>
+
+<head>
+
+    <!--Plugin CSS file with desired skin-->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>
+
+    <!--jQuery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!--Plugin JavaScript file-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
+
+
+</head>
+<body>
+<script type="text/javascript">
+    function addParameterToURL(param){
+    _url = location.href;
+    _url += (_url.split('?')[1] ? '&':'?') + param;
+    return _url;
+}
+    function search_age() {
+        let my_range = $(".js-range-slider").data("ionRangeSlider");
+        let from_ = my_range.old_from;
+        let to_ = my_range.old_to;
+        console.log(addParameterToURL("from"+from_))
+
+
+    }
+
+</script>
+<input type="text" class="js-range-slider" name="my_range" value=""/>
+<button onclick="search_age()">Search</button>
+
+<script type="text/javascript">
+    $(".js-range-slider").ionRangeSlider({
+        type: "double",
+        min: 0,
+        max: 100,
+        from: 20,
+        to: 50,
+        grid: true
+    });
+</script>
+</body>
+</html>
