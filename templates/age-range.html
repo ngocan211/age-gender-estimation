@@ -11,38 +11,113 @@
 
     <!--Plugin JavaScript file-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
+    <style>
+        .pagination {
+            padding: 10px;
+        }
 
+        .pagination a {
+            color: black;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+        }
+
+        /* Style the active/current link */
+        .pagination a.active {
+            background-color: dodgerblue;
+            color: white;
+        }
+
+        /* Add a grey background color on mouse-over */
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+    </style>
 
 </head>
 <body>
 <script type="text/javascript">
-    function addParameterToURL(param){
-    _url = location.href;
-    _url += (_url.split('?')[1] ? '&':'?') + param;
-    return _url;
-}
+    function addParameterToURL(param) {
+        _url = location.href;
+        _url += (_url.split('?')[1] ? '&' : '?') + param;
+        return _url;
+    }
+
     function search_age() {
         let my_range = $(".js-range-slider").data("ionRangeSlider");
         let from_ = my_range.old_from;
         let to_ = my_range.old_to;
-        console.log(addParameterToURL("from"+from_))
+        console.log(addParameterToURL("from" + from_))
 
 
     }
 
 </script>
 <input type="text" class="js-range-slider" name="my_range" value=""/>
-<button onclick="search_age()">Search</button>
-
 <script type="text/javascript">
+    var url = new URL(window.location.href);
+    var from_ = parseInt(url.searchParams.get("from"));
+    var to_ = parseInt(url.searchParams.get("to"));
     $(".js-range-slider").ionRangeSlider({
-        type: "double",
+        type: "int",
         min: 0,
         max: 100,
-        from: 20,
-        to: 50,
+        from: from_,
+        to: to_,
         grid: true
     });
 </script>
+<script type="text/javascript">
+    function addParameterToURL(param) {
+        _url = location.href;
+        _url += (_url.split('?')[1] ? '&' : '?') + param;
+        return _url;
+    }
+
+    function search_age() {
+        let my_range = $(".js-range-slider").data("ionRangeSlider");
+        let from_ = my_range.old_from;
+        let to_ = my_range.old_to;
+        var url = window.location.href.split('?')[0]
+        let params = new URLSearchParams(window.location.search);
+        params.set('from', from_);
+        params.set('to', to_);
+        params.set('page', 1);
+
+        window.location = url + "?" + params.toString()
+
+    }
+
+</script>
+<button onclick="search_age()">Search</button>
+
+<div class="pagination" id="pagination">
+</div>
+<script type="text/javascript">
+    var url = window.location.href.split('?')[0]
+    let params = new URLSearchParams(window.location.search);
+
+    for (const element of [...Array(10).keys()]) {
+        var page = element + 1;
+        params.set('page', page);
+
+        var a = document.createElement('a');
+        a.appendChild(document.createTextNode("" + page));
+        a.href = url + "?" + params.toString()
+        document.getElementById('pagination').appendChild(a);
+    }
+
+</script>
+
+<div>
+    {% for img_src in srcs %}
+    <figure style="float: left; margin-right: 20px; margin-bottom: 20px;">
+        <img src="{{ img_src.src }}" height="200px">
+    </figure>
+    {% endfor %}
+</div>
+<br>
+
 </body>
 </html>
