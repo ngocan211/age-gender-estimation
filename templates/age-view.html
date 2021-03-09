@@ -1,0 +1,26 @@
+<html>
+
+<head>
+
+
+    <!--jQuery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+</head>
+<body>
+
+
+<div>
+    {% for img_src in srcs %}
+    <figure style="float: left; margin-right: 20px; margin-bottom: 20px;">
+        <img src="{{ img_src.src }}" height="200px">
+            <P>{{ img_src.id }}</P>
+
+    </figure>
+    {% endfor %}
+</div>
+<br>
+
+</body>
+</html>

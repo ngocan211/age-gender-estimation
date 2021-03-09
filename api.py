@@ -1,7 +1,7 @@
 import uuid
 
 import cv2
-import dlib
+# import dlib
 import urllib.request
 import logging
 import numpy as np
@@ -9,7 +9,7 @@ from diskcache import Cache
 from pathlib import Path
 from omegaconf import OmegaConf
 from src.factory import get_model
-from tensorflow.keras.utils import get_file
+# from tensorflow.keras.utils import get_file
 from flask import Flask, render_template, jsonify, redirect, request
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.ERROR)
@@ -136,6 +136,15 @@ def age_range():
             rs.append(hex)
     r = [{'src': "https://thumb.photo-ac.com/%s/%s_t.jpeg" % (hex[0:2], hex)} for hex in rs[i_from:i_to]]
     return render_template('age-range.html', srcs=r)
+
+
+@app.route('/age-view', methods=['GET'])
+def age_view():
+    path = urllib.parse.unquote(request.args.get('path', 0))
+
+    r = [{'src': "https://thumb.photo-ac.com/%s/%s_t.jpeg" % (hex[0:2], hex), "id": id_} for [hex, id_] in
+         [line.strip().split(" ") for line in open(path, 'r').readlines()]]
+    return render_template('age-view.html', srcs=r)
 
 
 if __name__ == "__main__":
